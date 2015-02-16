@@ -1,2 +1,12 @@
-# laravel-session
-Laravel Session driver middleware for SlimPHP 3
+# Laravel Session middleware for SlimPHP
+
+This middleware allows you to use Laravel Session library instead of Slim's built in Session library.
+The benefit of this is being able to use different Session stores with the same API.
+
+## How to use
+
+```php
+$app = new Slim\App();
+$app->register(new Brill\LaravelSession\SessionManager($app));
+$app->add(new Brill\LaravelSession\Middleware($app['session']));
+$app->run();

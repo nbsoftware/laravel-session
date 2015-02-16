@@ -1,0 +1,25 @@
+{
+    "name": "brill/laravelsession",
+    "description": "Laravel Session package for Slim 3",
+    "keywords": ["session", "middleware", "slimphp"],
+    "homepage": "http://github.com/brillphp/laravel-session",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Smith",
+            "email": "a.smith@silentworks.co.uk",
+            "homepage": "http://thoughts.silentworks.co.uk/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "slim/slim": ">=2.4.4",
+        "illuminate/config": "~4.2",
+        "illuminate/session": "~4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Brill\\LaravelSession\\": "Brill/LaravelSession/"
+        }
+    }
+}

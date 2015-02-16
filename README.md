@@ -7,6 +7,6 @@ The benefit of this is being able to use different Session stores with the same 
 
 ```php
 $app = new Slim\App();
-$app->register(new Brill\LaravelSession\SessionManager($app));
+$app->register(new Brill\LaravelSession\SessionServiceProvider($app));
 $app->add(new Brill\LaravelSession\Middleware($app['session']));
 $app->run();

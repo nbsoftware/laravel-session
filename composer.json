@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Brill\\LaravelSession\\": "Brill/LaravelSession/"
+            "Brill\\LaravelSession\\": ""
         }
     }
 }

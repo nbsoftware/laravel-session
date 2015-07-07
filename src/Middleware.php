@@ -1,19 +1,18 @@
 <?php
 
-namespace Brill\LaravelSession;
+namespace Ackee\LaravelSession;
 
 use Carbon\Carbon;
+use Dflydev\FigCookies\FigRequestCookies;
+use Dflydev\FigCookies\FigResponseCookies;
+use Dflydev\FigCookies\SetCookie;
 use Illuminate\Session\SessionInterface;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Illuminate\Session\SessionManager;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
-class Middleware extends \Slim\Middleware
+class Middleware
 {
-    /**
-     * Set if Slim is before version 3
-     */
-    protected $slimLegacy;
-
     /**
      * The session manager.
      *
@@ -27,7 +26,6 @@ class Middleware extends \Slim\Middleware
      */
     public function __construct(SessionManager $manager)
     {
-        $this->slimLegacy = class_exists('\Slim\Slim');
         $this->manager = $manager;
     }
 
@@ -37,11 +35,8 @@ class Middleware extends \Slim\Middleware
      *
      * @throws \RuntimeException if there isn't a named 'login' route
      */
-    public function call()
+    public function __invoke(RequestInterface $request, ResponseInterface $response, $next = null)
     {
-        $request = $this->slimLegacy ? $this->app->request : $this->app['request'];
-        $response = $this->slimLegacy ? $this->app->response : $this->app['response'];
-
         // If a session driver has been configured, we will need to start the session here
         // so that the data is ready for an application. Note that the Laravel sessions
         // do not make use of PHP "native" sessions in any way since they are crappy.
@@ -50,7 +45,8 @@ class Middleware extends \Slim\Middleware
             $session = $this->startSession($request);
         }
 
-        $this->next->call();
+        /** @var callable $next */
+        $response = $next($request, $response);
 
         // Again, if the session has been configured we will need to close out the session
         // so that the attributes may be persisted to some storage medium. We will also
@@ -61,15 +57,17 @@ class Middleware extends \Slim\Middleware
 
             $this->addCookieToResponse($response, $session);
         }
+
+        return $response;
     }
 
     /**
      * Start the session for the given request.
      *
-     * @param  \Slim\Http\Request  $request
-     * @return \Illuminate\Session\SessionInterface
+     * @param RequestInterface $request
+     * @return SessionInterface
      */
-    protected function startSession(Request $request)
+    protected function startSession(RequestInterface $request)
     {
         $session = $this->getSession($request);
 
@@ -122,29 +120,25 @@ class Middleware extends \Slim\Middleware
     }
 
     /**
-     * @param \Slim\Http\Response $response
+     * @param ResponseInterface $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    protected function addCookieToResponse(Response $response, $session)
+    protected function addCookieToResponse(ResponseInterface $response, $session)
     {
         $s = $session;
 
         if ($this->sessionIsPersistent($c = $this->manager->getSessionConfig()))
         {
             $secure = array_get($c, 'secure', false);
-            $data = array(
-                'value' => $s->getId(),
-                'time' => $this->getCookieLifetime(),
-                'path' => $c['path'],
-                'domain' => $c['domain'],
-                'secure' => $secure
-            );
 
-            if ($this->slimLegacy) {
-                $response->cookies->set($s->getName(), $data);
-            } else {
-                $response->setCookie($s->getName(), $data);
-            }
+            $setCookie = SetCookie::create($s->getName())
+                ->withValue($s->getId())
+                ->withExpires($this->getCookieLifetime())
+                ->withDomain($c['domain'])
+                ->withPath($c['path'])
+                ->withSecure($secure);
+
+            FigResponseCookies::set($response, $setCookie);
         }
     }
 
@@ -197,14 +191,14 @@ class Middleware extends \Slim\Middleware
     }
 
     /**
-     * @param \Slim\Http\Request $request
-     * @return \Illuminate\Session\SessionInterface
+     * @param RequestInterface $request
+     * @return SessionInterface
      */
-    private function getSession(Request $request)
+    private function getSession(RequestInterface $request)
     {
         $session = $this->manager->driver();
-        $cookieData = $this->slimLegacy ? $request->cookies->get($session->getName()) : $request->getCookie($session->getName());
-        $session->setId($cookieData);
+        $cookieData = FigRequestCookies::get($request, $session->getName());
+        $session->setId($cookieData->getValue());
 
         return $session;
     }

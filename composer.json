@@ -1,8 +1,8 @@
 {
-    "name": "brill/laravel-session",
-    "description": "Laravel Session package for Slim 3",
+    "name": "ackee/laravel-session",
+    "description": "Laravel Session bridge for Slim 3",
     "keywords": ["session", "middleware", "slimphp"],
-    "homepage": "http://github.com/brillphp/laravel-session",
+    "homepage": "http://github.com/ackeephp/laravel-session",
     "license": "MIT",
     "authors": [
         {
@@ -13,12 +13,13 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "slim/slim": ">=2.4.4",
-        "illuminate/session": "~4.2"
+        "slim/slim": "~3.0",
+        "illuminate/session": "~4.2",
+        "dflydev/fig-cookies": "~1.0"
     },
     "autoload": {
         "psr-4": {
-            "Brill\\LaravelSession\\": ""
+            "Ackee\\LaravelSession\\": "src/"
         }
     }
 }

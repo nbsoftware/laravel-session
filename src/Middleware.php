@@ -55,7 +55,7 @@ class Middleware
         {
             $this->closeSession($session);
 
-            $this->addCookieToResponse($response, $session);
+            $response = $this->addCookieToResponse($response, $session);
         }
 
         return $response;
@@ -122,6 +122,7 @@ class Middleware
     /**
      * @param ResponseInterface $response
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @return ResponseInterface
      */
     protected function addCookieToResponse(ResponseInterface $response, $session)
     {
@@ -138,8 +139,9 @@ class Middleware
                 ->withPath($c['path'])
                 ->withSecure($secure);
 
-            FigResponseCookies::set($response, $setCookie);
+            $response = FigResponseCookies::set($response, $setCookie);
         }
+        return $response;
     }
 
     /**

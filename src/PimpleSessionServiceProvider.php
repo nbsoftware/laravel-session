@@ -8,14 +8,14 @@ use Illuminate\Session\SessionManager;
 
 class PimpleSessionServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    public function register(Container $container)
     {
-        $app['session'] = function ($app) {
-            return new SessionManager($app);
+        $container['session'] = function ($container) {
+            return new SessionManager($container);
         };
 
-        $app['session.store'] = function ($app) {
-            $manager = $app['session'];
+        $container['session.store'] = function ($container) {
+            $manager = $container['session'];
 
             return $manager->driver();
         };

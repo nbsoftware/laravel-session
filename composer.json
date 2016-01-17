@@ -15,7 +15,7 @@
         "php": ">=5.6.4",
         "dflydev/fig-cookies": "^1.0",
         "illuminate/config": "~5.2",
-        "illuminate/filesystem": "~5.2",
+        "illuminate/support": "~5.2",
         "illuminate/session": "~5.2",
         "slim/slim": "^3.0"
     },

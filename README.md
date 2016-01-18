@@ -1,6 +1,6 @@
 # Laravel Session middleware for SlimPHP
 
-This middleware allows you to use Laravel Session library with Slim 3.
+This middleware allows you to use Laravel 5.x Session library with Slim 3.
 The benefit of this is being able to use different Session stores with the same API.
 
 ## Install
@@ -15,6 +15,8 @@ composer require ackee/laravel-session
 
 ```php
 
+require __DIR__ . '/../vendor/autoload.php';
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -27,14 +29,11 @@ $container['files'] = function () {
     return new Illuminate\Filesystem\Filesystem();
 };
 
-// This is needed to load session configuration because of the dot notation
-$container['config'] = function ($c) {
-    $loader = new Illuminate\Config\FileLoader($c['files'], __DIR__);
-    return new Illuminate\Config\Repository($loader, 'production');
-};
+$container['config'] = new Illuminate\Config\Repository();
 
-// These are the configs or you could create this in a external file 
-// by using a proper config directory path in the loader above
+// These are the configs or you could load them from an external file 
+// cf https://github.com/mattstauffer/Torch/blob/master/components/session/index.php
+
 $container['config']['session.lifetime'] = 120; // Minutes idleable
 $container['config']['session.expire_on_close'] = false;
 $container['config']['session.lottery'] = array(2, 100); // lottery--how often do they sweep storage location to clear old ones?

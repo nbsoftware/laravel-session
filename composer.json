@@ -18,6 +18,7 @@
         "illuminate/container": "~5.2",
         "illuminate/support": "~5.2",
         "illuminate/session": "~5.2",
+        "illuminate/database": "~5.2",
         "slim/slim": "^3.0"
     },
     "autoload": {

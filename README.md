@@ -46,7 +46,7 @@ $sessionContainer = new \Illuminate\Container\Container();
 
 // Here are two usage examples:
 // One for file based and one for database based session driver
-// User either one of them and comment the other one
+// Use either one of them and comment the other one
 
 // This is needed for file based session driver
 //$sessionContainer['files'] = new Illuminate\Filesystem\Filesystem();
@@ -55,7 +55,7 @@ $sessionContainer = new \Illuminate\Container\Container();
 $connFactory = new \Illuminate\Database\Connectors\ConnectionFactory($sessionContainer);
 $sessionContainer['db'] = new \Illuminate\Database\DatabaseManager($sessionContainer, $connFactory);
 
-// You also need to create the needed database table. Example on postgres:
+// You also need to create the required database table. Example on postgres:
 /*
 CREATE TABLE sessions
 (
@@ -80,7 +80,7 @@ $sessionContainer['config'] = new Illuminate\Config\Repository();
 $sessionContainer['config']['session.lifetime'] = 20; // Minutes idleable
 $sessionContainer['config']['session.expire_on_close'] = false;
 $sessionContainer['config']['session.lottery'] = array(2, 100); // lottery--how often do they sweep storage location to clear old ones?
-$sessionContainer['config']['session.cookie'] = 'devtests_session';
+$sessionContainer['config']['session.cookie'] = 'laravel_session';
 $sessionContainer['config']['session.path'] = '/';
 $sessionContainer['config']['session.domain'] = null;
 // Choose the correct driver and parameters based on your configuration

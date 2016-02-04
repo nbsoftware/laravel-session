@@ -11,12 +11,11 @@ class PimpleSessionServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['session'] = function ($container) {
-            return new SessionManager($container);
+            return new SessionManager($container['sessionContainer']);
         };
 
         $container['session.store'] = function ($container) {
             $manager = $container['session'];
-
             return $manager->driver();
         };
     }

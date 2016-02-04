@@ -137,6 +137,7 @@ class Middleware
                 ->withExpires($this->getCookieLifetime())
                 ->withDomain($c['domain'])
                 ->withPath($c['path'])
+                ->withHttpOnly(true)
                 ->withSecure($secure);
 
             $response = FigResponseCookies::set($response, $setCookie);
